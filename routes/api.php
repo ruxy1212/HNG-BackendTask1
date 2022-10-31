@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/v1', function () {
     return response()->json([ 
-        "slackUsername" => "Ruxy1212", 
+        "slackUsername" => "ruxy1212", 
         "backend" => true, 
         "age" => 26, 
         "bio" => "A driven and hardworking individual, aspiring to be a fullstack web-developer, working with PHP language and Laravel framework."
