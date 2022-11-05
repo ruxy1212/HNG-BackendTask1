@@ -90,15 +90,15 @@ class PostController extends Controller
             switch ($operator) {
             case "+":
                 $result = $first_number + $second_number;
-                $op = "Addition";
+                $op = "addition";
                 break;
             case "-":
                 $result = $first_number - $second_number;
-                $op = "Subtraction";
+                $op = "subtraction";
                 break;
             case "*":
                 $result = $first_number * $second_number;
-                $op = "Multiplication";
+                $op = "multiplication";
                 break;
             default:
                 $result = "Error! Unkown operation";
