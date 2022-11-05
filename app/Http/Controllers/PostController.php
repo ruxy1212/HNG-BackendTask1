@@ -106,7 +106,7 @@ class PostController extends Controller
             }
 
             return response()->json([
-                    'slackUsername' => "rux1212",
+                    'slackUsername' => "ruxy1212",
                     'result' => $result,
                     'operation_type' => $op
                 ]);
