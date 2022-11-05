@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,3 +32,7 @@ Route::get('/v1', function () {
     // return $response;
     //$request->user();
 });
+
+//Route::post('stage2', [PostController::class, "arithemetic"]);
+Route::post('/v2', [PostController::class, 'postRequest']);
+
