@@ -54,24 +54,39 @@ class PostController extends Controller
                 $operator = '+';
                 $word_index = $i;
             }
-            else if (in_array($arr[$i], ['subtract','minus','difference','left','subtraction','remove','reduce','deduce','decrease','diminute','diminish','take','deduct','debit','abstract','discount','withdraw','dock','off'], true ) || $arr[$i]=='than'&&$arr[$i-1]=='less' || $arr[$i]=='than'&&$arr[$i-1]=='fewer'||$arr[$i]=='away'&&$arr[$i-1]=='take') {
+            else if (in_array($arr[$i], ['subtract','minus','difference','left','subtraction','remove','reduce','deduce','decrease','diminute','diminish','take','deduct','debit','abstract','discount','withdraw','dock','off','comot'], true ) || $arr[$i]=='than'&&$arr[$i-1]=='less' || $arr[$i]=='than'&&$arr[$i-1]=='fewer'||$arr[$i]=='away'&&$arr[$i-1]=='take') {
                 $operator = '-';
                 $word_index = $i;
             }
         }
 
-        if((in_array("first", $arr) || in_array("x", $arr)) && (in_array("second", $arr) || in_array("y", $arr))){
+        if((in_array("first", $arr) || in_array("x", $arr)) || (in_array("second", $arr) || in_array("y", $arr))){
             ( in_array("first", $arr) ? $first_index = array_search('first', $arr) : $first_index = 9999999 );
             ( in_array("x", $arr) ? $x_index = array_search('x', $arr) : $x_index = 9999999 );
             ( in_array("second", $arr) ? $second_index = array_search('second', $arr) : $second_index = 9999999 );
             ( in_array("y", $arr) ? $y_index = array_search('y', $arr) : $y_index = 9999999 );
             
-            if((($first_index < $f_word_index) && ($f_word_index < $second_index))  || (($x_index < $f_word_index) && ($f_word_index < $second_index)) ){ //x from y
+            if((($first_index < $f_word_index) && ($f_word_index < $second_index))  || (($x_index < $f_word_index) && ($f_word_index < $y_index)) && (count($num_arr)==0)){ //x from y
                 $temp_number = $first_number;
                 $first_number = $second_number; 
                 $second_number = $temp_number;
             }
+            if(count($num_arr) == 1){
+                if($first_index != 9999999 || $x_index != 9999999){
+                    $second_number = array_pop($num_arr); 
+                }else if ($second_index != 9999999 || $y_index != 9999999){
+                    if(($f_word_index > $num_index[0]) && ($second_index > $f_word_index)){ //num<f<second
+                        $temp_number = $first_number; 
+                        $first_number = array_pop($num_arr); 
+                        $second_number = $temp_number;
+                    } //else if(){
+                    
+                    // }
+                }
+            }
         }
+
+        // ( && )  || ( && ) &&
  
         //case 1: from 1 subtract 2: f>>1>>2 => 1-2 ~ (first number is first operand)
         //case 2: subtract 1 from 2: 1>>f>>2 => 2-1 ~ (second number is first operand)
