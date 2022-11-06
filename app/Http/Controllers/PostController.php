@@ -17,6 +17,7 @@ class PostController extends Controller
         $string = str_replace('.',"",$string);
         $string = str_replace(',',"",$string);
         $string = str_replace('!',"",$string);
+        $string = str_replace('?',"",$string);
         $string = str_replace(';',"",$string);
         $string = str_replace(':',"",$string);
         $string = str_replace('"',"",$string);
@@ -31,8 +32,8 @@ class PostController extends Controller
         
         for ($i=0; $i < count($arr); $i++) { 
             if (is_numeric($arr[$i])) {
-                 array_push($num_arr,$arr[$i]);
-                 array_push($num_index,$i);
+                    array_push($num_arr,$arr[$i]);
+                    array_push($num_index,$i);
                 if(array_key_exists(1, $num_index) && ($arr[$i-1]=='-') && is_numeric($arr[$i-2])){ //special case of dash (-)
                     $operator = '-';
                     $word_index = $i;
@@ -66,28 +67,33 @@ class PostController extends Controller
             ( in_array("second", $arr) ? $second_index = array_search('second', $arr) : $second_index = 9999999 );
             ( in_array("y", $arr) ? $y_index = array_search('y', $arr) : $y_index = 9999999 );
             
-            if((($first_index < $f_word_index) && ($f_word_index < $second_index))  || (($x_index < $f_word_index) && ($f_word_index < $y_index)) && (count($num_arr)==0)){ //x from y
-                $temp_number = $first_number;
-                $first_number = $second_number; 
-                $second_number = $temp_number;
+            if(count($num_arr)==0){ //x from y
+                if((($first_index < $f_word_index) && ($f_word_index < $second_index))  || (($x_index < $f_word_index) && ($f_word_index < $y_index))){
+                    $temp_number = $first_number;
+                    $first_number = $second_number; 
+                    $second_number = $temp_number;
+                }
             }
-            if(count($num_arr) == 1){
+            else if(count($num_arr) == 1){
                 if($first_index != 9999999 || $x_index != 9999999){
-                    $second_number = array_pop($num_arr); 
+                    if(($f_word_index > $num_index[0]) && ($first_index > $f_word_index) || ($f_word_index < $first_index) && ( $first_index > $num_index[0])){ //y-num,f<first<num
+                        $second_number = array_pop($num_arr);
+                    }else if(($f_word_index < $num_index[0]) && ($first_index < $f_word_index) || ($f_word_index < $num_index[0]) && ( $num_index[0] < $first_index )){
+                        $second_number = $first_number; //$temp_number;
+                        $first_number = array_pop($num_arr);
+                    }
                 }else if ($second_index != 9999999 || $y_index != 9999999){
-                    if(($f_word_index > $num_index[0]) && ($second_index > $f_word_index)){ //num<f<second
-                        $temp_number = $first_number; 
-                        $first_number = array_pop($num_arr); 
-                        $second_number = $temp_number;
-                    } //else if(){
+                    if(($f_word_index > $num_index[0]) && ($second_index > $f_word_index) || ($f_word_index < $second_index) && ( $second_index < $num_index[0])){ //f->sec.. 
+                        $first_number = $second_number; 
+                        $second_number = array_pop($num_arr);
+                    }else if(($f_word_index < $num_index[0]) && ($second_index < $f_word_index) || ($f_word_index < $num_index[0]) && ( $num_index[0] < $second_index )){
+                        $first_number = array_pop($num_arr);
+                    }
                     
-                    // }
                 }
             }
         }
-
-        // ( && )  || ( && ) &&
- 
+    
         //case 1: from 1 subtract 2: f>>1>>2 => 1-2 ~ (first number is first operand)
         //case 2: subtract 1 from 2: 1>>f>>2 => 2-1 ~ (second number is first operand)
         if(count($num_arr)>1){
@@ -98,7 +104,7 @@ class PostController extends Controller
                 $first_number = array_pop($num_arr); 
                 $second_number = array_pop($num_arr);
             }          
-          }
+        }
         $result = '';
 
         if (is_numeric($first_number) && is_numeric($second_number)) {
@@ -121,11 +127,10 @@ class PostController extends Controller
             }
 
             return response()->json([
-                    'slackUsername' => "ruxy1212",
+                    'slackUsername' => $second_index.",,".count($num_arr), //"ruxy1212",
                     'result' => $result,
                     'operation_type' => $op
                 ]);
         }
     }
-
 }
