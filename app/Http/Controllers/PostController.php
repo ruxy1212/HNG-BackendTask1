@@ -14,14 +14,14 @@ class PostController extends Controller
         $string = $request->input('operation_type');
         $op = "Operation";
 
-        $string = str_replace('.',"",$string);
-        $string = str_replace(',',"",$string);
-        $string = str_replace('!',"",$string);
-        $string = str_replace('?',"",$string);
-        $string = str_replace(';',"",$string);
-        $string = str_replace(':',"",$string);
-        $string = str_replace('"',"",$string);
-        $string = str_replace("'","",$string);
+        // $string = str_replace('.',"",$string);
+        // $string = str_replace(',',"",$string);
+        // $string = str_replace('!',"",$string);
+        // $string = str_replace('?',"",$string);
+        // $string = str_replace(';',"",$string);
+        // $string = str_replace(':',"",$string);
+        // $string = str_replace('"',"",$string);
+        // $strin                               
         
         $arrA = explode(' ',$string);
         $arr = array_map('strtolower', $arrA);
@@ -93,6 +93,15 @@ class PostController extends Controller
                 }
             }
         }
+
+        // $array = [];
+        // for($i=0; $i<10; $i++){
+        //     if($i == 3 || $i == 6 || $i == 9){
+        //         echo "This is the key and value for array: $i and $array[$i]"; 
+        //     }
+        // }
+        
+        //echo "This is the first value: $array[0]";
     
         //case 1: from 1 subtract 2: f>>1>>2 => 1-2 ~ (first number is first operand)
         //case 2: subtract 1 from 2: 1>>f>>2 => 2-1 ~ (second number is first operand)
